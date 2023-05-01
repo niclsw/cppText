@@ -4,7 +4,7 @@
 
 void getFile(std::string &fileName, std::fstream &file);
 void read(std::fstream &file, std::fstream &outFile);
-std::string removeComma(const auto &str);
+std::string removeComma(auto str);
 
 int main() {
 
@@ -51,7 +51,7 @@ void read(std::fstream &file, std::fstream &outFile)
         
         if (line.find("*") != std::string::npos && isdigit(line.at(10)) == true) {
 
-            const auto& qty = line.substr(53,68);
+            auto qty = line.substr(53,68);
             outFile << pos << "," << line.substr(9,20) << "," << removeComma(qty) << std::endl;
             
             //std::cout << line.substr(8,19) << "|" << line.substr(57, 68) << std::endl;
@@ -61,7 +61,7 @@ void read(std::fstream &file, std::fstream &outFile)
     }
 } // end readToTree
 
-std::string removeComma(const auto &str) {
+std::string removeComma(auto str) {
 
     std::string retStr;
     std::string comma{","};
@@ -69,8 +69,22 @@ std::string removeComma(const auto &str) {
 
     pos = str.find(comma);
 
+    if (pos > 10000) {
+        retStr = str;
+    }
+    else {
+        retStr = str.replace(pos, comma.length(), "");
+    }
 
-    retStr = str.replace(pos, comma.length(), "");
+    // try {
+    //     retStr = str.replace(pos, comma.length(), "");
+    // } catch (...)
+    // { 
+    //     retStr = str;
+    // }
+
+
+   // retStr = str.replace(pos, comma.length(), "");
 
     return retStr;
 
