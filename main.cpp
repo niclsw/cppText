@@ -4,6 +4,7 @@
 
 void getFile(std::string &fileName, std::fstream &file);
 void read(std::fstream &file, std::fstream &outFile);
+std::string removeComma(const auto &str);
 
 int main() {
 
@@ -17,7 +18,7 @@ int main() {
     file.close();
     outFile.close();
 
-}
+} // end main
 
 void getFile(std::string &fileName, std::fstream &file)
 {
@@ -40,20 +41,37 @@ void getFile(std::string &fileName, std::fstream &file)
 
 void read(std::fstream &file, std::fstream &outFile)
 {
-
+    // will clean
     std::string line;
-
+    size_t pos{0};
     outFile.open("outfile.csv", std::ios::out);
 
     while (std::getline(file, line))
     {
-        // if line == string length of 11 then it is an NDC
+        
         if (line.find("*") != std::string::npos && isdigit(line.at(10)) == true) {
-            outFile << line.substr(9,20) << "|" << line.substr(53, 68) << std::endl;
+
+            const auto& qty = line.substr(53,68);
+            outFile << pos << "," << line.substr(9,20) << "," << removeComma(qty) << std::endl;
+            
             //std::cout << line.substr(8,19) << "|" << line.substr(57, 68) << std::endl;
         }
-        //if (line.find("**") != std::string::npos)
-        //    std::cout << idValue << " Found - " << line << std::endl;
-        //}
+        
+        pos++;
     }
 } // end readToTree
+
+std::string removeComma(const auto &str) {
+
+    std::string retStr;
+    std::string comma{","};
+    size_t pos{0};
+
+    pos = str.find(comma);
+
+
+    retStr = str.replace(pos, comma.length(), "");
+
+    return retStr;
+
+} // end removeComma
