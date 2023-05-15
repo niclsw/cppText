@@ -1,3 +1,5 @@
+// Working to read other types of files where the format is slightly different from example.txt
+
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -23,7 +25,7 @@ int main() {
 void getFile(std::string &fileName, std::fstream &file)
 {
 
-    fileName = "example.txt";
+    fileName = "AMO100-1.txt";
 
     // open file
     file.open(fileName, std::ios::in);
@@ -43,31 +45,49 @@ void read(std::fstream &file, std::fstream &outFile)
 {
     // will clean
     std::string line;
-    size_t linePos{0};
-    outFile.open("out.csv", std::ios::out);
+    size_t pos{0};
+    outFile.open("outfile2.csv", std::ios::out);
 
     while (std::getline(file, line))
     {
         
-        if (line.find("*") != std::string::npos && isdigit(line.at(10))) {
+        if (line.find("*") != std::string::npos && isdigit(line.at(10)) == true) {
 
-            auto qty = line.substr(48,68);
-            outFile << linePos << "," << line.substr(8,20) << "," << removeComma(qty) << std::endl;
+            auto qty = line.substr(53,68);
+            outFile << pos << "," << line.substr(9,38) << "," << removeComma(qty) << std::endl;
             
             //std::cout << line.substr(8,19) << "|" << line.substr(57, 68) << std::endl;
         }
         
-        linePos++;
+        pos++;
     }
 } // end readToTree
 
 std::string removeComma(auto str) {
 
+    std::string retStr;
     std::string comma{","};
     size_t pos{0};
 
     pos = str.find(comma);
 
-    return (pos > 1000 ? str : str.replace(pos, comma.length(), ""));
+    if (pos > 10000) {
+        retStr = str;
+    }
+    else {
+        retStr = str.replace(pos, comma.length(), "");
+    }
+
+    // try {
+    //     retStr = str.replace(pos, comma.length(), "");
+    // } catch (...)
+    // { 
+    //     retStr = str;
+    // }
+
+
+   // retStr = str.replace(pos, comma.length(), "");
+
+    return retStr;
 
 } // end removeComma
